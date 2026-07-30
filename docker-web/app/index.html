@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello, Codyssey World! </title>
+     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff0f5;
+            margin: 0;
+        }
+        .cute-card {
+            width: 200px;
+            height: 200px;
+            background: #ffb6c1;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(255, 182, 193, 0.5);
+            transition: 0.3s ease;
+            cursor: pointer;
+        }
+        .cute-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: #ff69b4;
+        }
+        .emoji {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        .text {
+            color: white;
+            font-family: 'Malgun Gothic', sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cute-card">
+        <div class="emoji">🥺</div>
+        <div class="text">방가와요!</div>
+        <div class="text">Docker 정상 운영중</div>
+    </div>
+</body>
+</html>
