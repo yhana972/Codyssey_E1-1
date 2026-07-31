@@ -2507,5 +2507,1088 @@ codyssey-data 재연결
 
 </details>
 
+## 5. 🐙 Git 및 GitHub 버전 관리
 
+> 버전 관리 시스템과 Git의 기본 구조를 학습하고, Git 사용자 정보를 설정한 뒤 로컬 저장소를 생성하여 GitHub 원격 저장소와 연결했습니다. 이후 원격 저장소 주소를 HTTPS 방식에서 SSH 방식으로 변경하고 정상적으로 Push되는지 확인했습니다.
 
+---
+
+<details>
+<summary><strong>5-0. 버전 관리란?</strong></summary>
+
+버전 관리란 파일의 변화를 시간의 흐름에 따라 기록하고, 필요한 경우 특정 시점의 파일 상태를 다시 불러올 수 있도록 관리하는 시스템입니다.
+
+문서나 소스 코드를 수정하다 보면 다음과 같은 상황이 발생할 수 있습니다.
+
+- 이전에 작성한 내용으로 되돌아가야 하는 경우
+- 어떤 부분이 언제 변경되었는지 확인해야 하는 경우
+- 여러 사람이 같은 프로젝트를 함께 수정해야 하는 경우
+- 잘못 수정하거나 삭제한 파일을 복구해야 하는 경우
+
+버전 관리 시스템을 사용하면 파일을 단순히 복사하여 보관하는 것보다 변경 이력을 체계적으로 관리할 수 있습니다.
+
+```text
+프로젝트 최초 상태
+    ↓
+파일 수정
+    ↓
+변경 내용 저장
+    ↓
+추가 수정
+    ↓
+필요한 시점의 버전으로 복구
+```
+
+### 버전 관리의 주요 목적
+
+| 목적 | 설명 |
+| :--- | :--- |
+| 변경 이력 기록 | 파일이 언제, 어떻게 변경되었는지 확인 |
+| 특정 버전 복구 | 이전 상태의 파일 또는 프로젝트로 되돌리기 |
+| 협업 | 여러 개발자가 같은 프로젝트를 함께 관리 |
+| 변경 내용 비교 | 이전 버전과 현재 버전의 차이 확인 |
+| 백업 | 저장소의 기록을 이용하여 작업 내용 복구 |
+
+<!-- 버전 관리 개념 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-1. 버전 관리 시스템의 종류</strong></summary>
+
+버전 관리 시스템은 저장소와 변경 이력을 관리하는 방식에 따라 로컬 버전 관리 시스템, 중앙집중식 버전 관리 시스템, 분산 버전 관리 시스템으로 구분할 수 있습니다.
+
+---
+
+### 1. 로컬 버전 관리 시스템
+
+가장 단순한 버전 관리 방법은 파일이나 디렉토리를 복사하여 보관하는 것입니다.
+
+예를 들어 디렉토리 이름에 날짜나 버전을 붙여 관리할 수 있습니다.
+
+```text
+project_2026-07-28/
+project_2026-07-29/
+project_final/
+project_final_final/
+```
+
+#### 장점
+
+- 사용 방법이 단순함
+- 별도의 서버나 네트워크가 필요하지 않음
+- 개인 컴퓨터에서 바로 사용할 수 있음
+
+#### 단점
+
+- 디렉토리를 실수로 삭제할 수 있음
+- 잘못된 파일을 수정하거나 복사할 수 있음
+- 파일별 변경 내용을 확인하기 어려움
+- 버전이 많아질수록 관리가 복잡해짐
+- 여러 사람이 함께 작업하기 어려움
+
+이러한 문제를 해결하기 위해 파일의 변경 정보를 데이터베이스에 저장하는 로컬 버전 관리 시스템이 만들어졌습니다.
+
+대표적인 도구로는 `RCS(Revision Control System)`가 있습니다.
+
+RCS는 파일 전체를 매번 저장하는 대신 파일에서 변경된 부분인 **Patch Set**을 관리합니다.
+
+```text
+원본 파일
+    +
+Patch Set 1
+    +
+Patch Set 2
+    =
+특정 시점의 파일 상태
+```
+
+일련의 Patch Set을 순서대로 적용하여 파일을 특정 시점의 상태로 복원할 수 있습니다.
+
+---
+
+### 2. 중앙집중식 버전 관리 시스템
+
+중앙집중식 버전 관리 시스템은 프로젝트 파일과 변경 이력을 관리하는 중앙 서버가 존재하는 구조입니다.
+
+대표적인 시스템은 다음과 같습니다.
+
+- CVS
+- Subversion
+- Perforce
+
+클라이언트는 중앙 서버에서 프로젝트 파일을 받아 작업합니다.
+
+이 과정을 Checkout이라고 합니다.
+
+```text
+개발자 A ─┐
+개발자 B ─┼── 중앙 저장소 서버
+개발자 C ─┘
+```
+
+#### 장점
+
+- 누가 어떤 작업을 수행하는지 중앙에서 확인 가능
+- 관리자가 프로젝트와 사용자를 통합하여 관리하기 쉬움
+- 로컬 컴퓨터마다 별도의 저장소를 관리하는 것보다 관리가 단순함
+- 팀 단위 협업에 적합함
+
+#### 단점
+
+중앙 서버에 장애가 발생하면 모든 사용자가 영향을 받습니다.
+
+```text
+중앙 서버 정상
+    ↓
+Checkout, Commit, 협업 가능
+
+중앙 서버 장애
+    ↓
+협업과 변경 내용 공유 불가능
+```
+
+중앙 저장소의 디스크에 문제가 생기고 백업이 없다면 프로젝트의 전체 변경 이력이 손실될 수 있습니다.
+
+이처럼 시스템의 핵심 기능이 하나의 서버에 집중되어 있는 구조를 단일 장애점이라고 합니다.
+
+---
+
+### 3. 분산 버전 관리 시스템
+
+분산 버전 관리 시스템에서는 각 클라이언트가 프로젝트의 최신 파일만 내려받는 것이 아니라 저장소의 변경 이력 전체를 복제합니다.
+
+대표적인 분산 버전 관리 시스템은 다음과 같습니다.
+
+- Git
+- Mercurial
+- Bazaar
+- Darcs
+
+```text
+원격 저장소
+    ├── 개발자 A의 전체 저장소
+    ├── 개발자 B의 전체 저장소
+    └── 개발자 C의 전체 저장소
+```
+
+각 개발자의 컴퓨터에 프로젝트 파일과 변경 이력이 모두 존재하기 때문에 네트워크에 연결되지 않은 상태에서도 대부분의 Git 작업을 수행할 수 있습니다.
+
+원격 서버에 문제가 생기더라도 개발자의 로컬 저장소에 전체 이력이 남아 있으므로 저장소를 복구하는 데 활용할 수 있습니다.
+
+---
+
+### 버전 관리 시스템 비교
+
+| 구분 | 로컬 VCS | 중앙집중식 VCS | 분산 VCS |
+| :--- | :--- | :--- | :--- |
+| 저장 위치 | 개인 컴퓨터 | 중앙 서버 | 각 클라이언트와 원격 서버 |
+| 변경 이력 | 로컬에 저장 | 중앙 서버에 저장 | 각 클라이언트가 전체 이력 보유 |
+| 협업 | 어려움 | 가능 | 가능 |
+| 오프라인 작업 | 가능 | 제한적 | 대부분 가능 |
+| 서버 장애 영향 | 없음 | 매우 큼 | 로컬 작업 가능 |
+| 대표 도구 | RCS | CVS, SVN, Perforce | Git, Mercurial |
+
+<!-- 버전 관리 시스템 종류 비교 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-2. Git의 기본 특징</strong></summary>
+
+Git은 분산 버전 관리 시스템으로, 프로젝트의 파일과 변경 이력을 각 개발자의 로컬 저장소에서 관리할 수 있습니다.
+
+---
+
+### 차이점이 아닌 스냅샷으로 관리
+
+Git은 프로젝트의 각 버전을 파일 변경 사항의 목록으로만 관리하는 것이 아니라, 특정 시점의 프로젝트 상태를 스냅샷으로 저장합니다.
+
+```text
+시간 1: 프로젝트 스냅샷 A
+시간 2: 프로젝트 스냅샷 B
+시간 3: 프로젝트 스냅샷 C
+```
+
+파일이 변경되지 않았다면 동일한 파일을 다시 저장하지 않고 이전에 저장된 파일을 가리키는 링크를 사용합니다.
+
+```text
+첫 번째 커밋
+├── index.html A
+├── style.css A
+└── app.js A
+
+두 번째 커밋
+├── index.html B
+├── style.css A를 참조
+└── app.js A를 참조
+```
+
+따라서 Git은 프로젝트 데이터를 시간순으로 저장된 스냅샷의 흐름처럼 관리합니다.
+
+---
+
+### 대부분의 명령을 로컬에서 실행
+
+Git 저장소를 Clone하면 프로젝트의 파일뿐만 아니라 전체 변경 이력이 로컬 컴퓨터에 저장됩니다.
+
+따라서 다음과 같은 작업은 원격 서버에 연결하지 않아도 수행할 수 있습니다.
+
+- 파일 변경 상태 확인
+- 이전 커밋 확인
+- 브랜치 생성
+- 커밋 생성
+- 이전 버전과 비교
+- 특정 커밋으로 이동
+
+```text
+로컬 Git 저장소
+├── 현재 프로젝트 파일
+├── 커밋 기록
+├── 브랜치 정보
+└── 객체 데이터베이스
+```
+
+대부분의 작업을 로컬 디스크에서 처리하기 때문에 속도가 빠릅니다.
+
+단, 원격 저장소의 최신 내용을 가져오는 `git pull`이나 변경 내용을 전송하는 `git push`에는 네트워크 연결이 필요합니다.
+
+---
+
+### Git의 무결성
+
+Git은 데이터를 저장하기 전에 체크섬을 계산하고, 이 값을 이용하여 데이터를 식별하고 관리합니다.
+
+체크섬은 데이터의 내용을 기반으로 생성되는 고유한 값입니다.
+
+Git에서는 전통적으로 SHA-1 해시를 사용하며, SHA-1 값은 40자의 16진수 문자열로 표현됩니다.
+
+```text
+24b9da6552252987aa493b52f8696cd6d3b00373
+```
+
+파일 내용이 변경되면 체크섬도 변경됩니다.
+
+```text
+파일 내용 A
+    ↓
+체크섬 A
+
+파일 내용 수정
+    ↓
+체크섬 B
+```
+
+Git은 체크섬을 통해 저장된 데이터가 변경되거나 손상되었는지 확인할 수 있습니다.
+
+---
+
+### 데이터를 추가하는 방식
+
+Git은 일반적으로 기존 기록을 직접 수정하기보다 새로운 데이터를 객체 데이터베이스에 추가하는 방식으로 동작합니다.
+
+커밋하지 않은 변경 내용은 실수로 잃어버릴 수 있지만, 한 번 커밋하여 Git 데이터베이스에 저장한 내용은 비교적 복구하기 쉽습니다.
+
+```text
+작업 내용 수정
+    ↓
+Staging
+    ↓
+Commit
+    ↓
+Git 데이터베이스에 스냅샷 저장
+```
+
+> 과거 커밋을 재작성하거나 삭제하는 명령도 존재하지만, 일반적인 Git 사용 흐름에서는 기존 커밋 위에 새로운 기록을 추가하여 변경 이력을 관리합니다.
+
+<!-- Git 기본 특징 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-3. Git 파일의 세 가지 상태</strong></summary>
+
+Git은 프로젝트 파일을 `Modified`, `Staged`, `Committed`의 세 가지 상태로 관리합니다.
+
+---
+
+### 1. Modified
+
+파일을 수정했지만 아직 Git 데이터베이스에 커밋하지 않은 상태입니다.
+
+```text
+파일 수정
+    ↓
+Modified
+```
+
+예를 들어 `README.md`를 수정한 후 아직 `git add`를 실행하지 않았다면 해당 파일은 Modified 상태입니다.
+
+---
+
+### 2. Staged
+
+수정한 파일을 다음 커밋에 포함하겠다고 표시한 상태입니다.
+
+```text
+Modified
+    ↓ git add
+Staged
+```
+
+`git add` 명령어를 사용하여 파일을 Staging Area에 등록합니다.
+
+```bash
+git add README.md
+```
+
+모든 변경 파일을 등록하려면 다음 명령어를 사용할 수 있습니다.
+
+```bash
+git add .
+```
+
+---
+
+### 3. Committed
+
+Staging Area에 등록한 파일의 스냅샷이 로컬 Git 데이터베이스에 안전하게 저장된 상태입니다.
+
+```text
+Staged
+    ↓ git commit
+Committed
+```
+
+```bash
+git commit -m "커밋 메시지"
+```
+
+커밋이 생성되면 해당 시점의 프로젝트 상태가 Git 저장소에 기록됩니다.
+
+---
+
+### Git 상태 변화
+
+```text
+Working Directory에서 파일 수정
+            ↓
+         Modified
+            ↓ git add
+          Staged
+            ↓ git commit
+        Committed
+```
+
+| 상태 | 의미 | 관련 명령어 |
+| :--- | :--- | :--- |
+| `Modified` | 파일을 수정했지만 Stage하지 않은 상태 | 파일 편집 |
+| `Staged` | 다음 커밋에 포함하도록 등록한 상태 | `git add` |
+| `Committed` | 로컬 저장소에 스냅샷이 저장된 상태 | `git commit` |
+
+<!-- Git 파일 상태 변화 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-4. Git의 세 가지 작업 영역</strong></summary>
+
+Git의 세 가지 파일 상태는 Working Directory, Staging Area, Git Directory와 연결됩니다.
+
+---
+
+### 1. Working Directory
+
+Working Directory는 사용자가 실제로 파일을 열고 수정하는 작업 공간입니다.
+
+Git 저장소에 저장된 특정 버전의 파일을 꺼내어 작업할 수 있도록 구성한 디렉토리입니다.
+
+```text
+프로젝트/
+├── README.md
+├── Dockerfile
+├── app/
+└── images/
+```
+
+파일을 수정하면 Working Directory의 파일이 Modified 상태가 됩니다.
+
+---
+
+### 2. Staging Area
+
+Staging Area는 다음 커밋에 포함할 파일의 정보를 임시로 저장하는 영역입니다.
+
+```bash
+git add README.md
+```
+
+`git add`를 실행하면 파일의 현재 내용이 Staging Area에 등록됩니다.
+
+Working Directory의 모든 수정 파일이 자동으로 커밋되는 것은 아니며, 사용자가 원하는 파일만 선택하여 Stage할 수 있습니다.
+
+```bash
+git add README.md
+git add Dockerfile
+```
+
+---
+
+### 3. Git Directory
+
+Git Directory는 프로젝트의 메타데이터와 객체 데이터베이스가 저장되는 곳입니다.
+
+일반적으로 프로젝트 내부의 `.git` 디렉토리가 이에 해당합니다.
+
+```text
+프로젝트/
+├── .git/
+├── README.md
+├── Dockerfile
+└── app/
+```
+
+`.git` 디렉토리에는 다음과 같은 정보가 저장됩니다.
+
+- 커밋 기록
+- 브랜치 정보
+- 객체 데이터
+- 원격 저장소 설정
+- 태그 정보
+- Staging Area 정보
+
+`git init`을 실행하면 현재 디렉토리에 `.git` 디렉토리가 생성됩니다.
+
+```bash
+git init
+```
+
+`.git` 디렉토리가 삭제되면 일반 파일은 남아 있을 수 있지만 Git 저장소의 커밋 이력과 설정은 사라집니다.
+
+---
+
+### Git의 기본 작업 흐름
+
+```text
+1. Working Directory에서 파일 수정
+                 ↓
+2. git add로 Staging Area에 등록
+                 ↓
+3. git commit으로 Git Directory에 저장
+```
+
+```bash
+git add README.md
+git commit -m "README 작성"
+```
+
+<!-- Git 작업 영역 구조 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-5. Git 설치 확인</strong></summary>
+
+운영체제별로 Git을 설치하거나 설치 상태를 확인할 수 있습니다.
+
+---
+
+### Fedora 계열 Linux
+
+```bash
+sudo dnf install git-all
+```
+
+---
+
+### Ubuntu 및 Debian 계열 Linux
+
+```bash
+sudo apt install git-all
+```
+
+패키지 목록을 먼저 갱신해야 하는 경우 다음과 같이 실행할 수 있습니다.
+
+```bash
+sudo apt update
+sudo apt install git-all
+```
+
+---
+
+### macOS
+
+macOS에서는 Xcode Command Line Tools를 통해 Git을 설치할 수 있습니다.
+
+터미널에서 처음으로 Git 명령어를 실행했을 때 Git이 설치되어 있지 않으면 설치 안내가 표시될 수 있습니다.
+
+```bash
+git --version
+```
+
+설치되어 있다면 다음과 같이 Git 버전이 출력됩니다.
+
+```text
+git version 2.53.0
+```
+
+---
+
+### Windows
+
+Windows에서는 Git 공식 설치 프로그램인 Git for Windows를 설치하여 사용할 수 있습니다.
+
+설치 후 PowerShell, 명령 프롬프트 또는 Git Bash에서 다음 명령어로 확인합니다.
+
+```bash
+git --version
+```
+
+<!-- Git 설치 및 버전 확인 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-6. Git 최초 사용자 설정</strong></summary>
+
+Git을 설치한 후 커밋에 기록할 사용자 이름과 이메일 주소를 설정했습니다.
+
+Git은 커밋을 생성할 때 설정된 이름과 이메일 정보를 커밋 작성자 정보로 기록합니다.
+
+환경 설정은 일반적으로 한 컴퓨터에서 최초 한 번 설정합니다.
+
+---
+
+### 사용자 이름 설정
+
+```bash
+git config --global user.name "사용자 이름"
+```
+
+실제 설정 예시는 다음과 같습니다.
+
+```bash
+git config --global user.name "yhana972"
+```
+
+---
+
+### 사용자 이메일 설정
+
+```bash
+git config --global user.email "사용자 이메일"
+```
+
+실제 GitHub 계정에 등록된 이메일 주소를 사용하여 설정합니다.
+
+```bash
+git config --global user.email "이메일 주소"
+```
+
+---
+
+### 기본 브랜치 이름 설정
+
+새로운 Git 저장소를 생성할 때 기본 브랜치 이름을 `main`으로 지정했습니다.
+
+```bash
+git config --global init.defaultBranch main
+```
+
+이 설정 이후 `git init`으로 새 저장소를 생성하면 기본 브랜치가 `main`으로 만들어집니다.
+
+---
+
+### `--global` 옵션
+
+```bash
+--global
+```
+
+현재 사용자 계정 전체에 설정을 적용합니다.
+
+한 번 설정하면 같은 사용자 계정에서 생성하는 다른 Git 저장소에도 적용됩니다.
+
+특정 저장소에만 다른 설정을 적용하려면 해당 저장소 안에서 `--global` 없이 실행할 수 있습니다.
+
+```bash
+git config user.name "프로젝트 전용 사용자 이름"
+git config user.email "프로젝트 전용 이메일"
+```
+
+저장소별 설정은 전역 설정보다 우선 적용됩니다.
+
+---
+
+### 설정 확인
+
+현재 Git 설정을 확인했습니다.
+
+```bash
+git config --list
+```
+
+설정 중 사용자 이름만 확인하려면 다음 명령어를 사용합니다.
+
+```bash
+git config user.name
+```
+
+이메일만 확인하려면 다음 명령어를 사용합니다.
+
+```bash
+git config user.email
+```
+
+기본 브랜치 설정을 확인하려면 다음 명령어를 사용합니다.
+
+```bash
+git config init.defaultBranch
+```
+
+커밋에 기록된 작성자 정보는 이후 전역 설정을 변경하더라도 기존 커밋에서 자동으로 바뀌지 않습니다.
+
+<!-- Git 사용자 정보 설정 이미지 삽입 위치 -->
+
+<!-- Git 설정 확인 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-7. 로컬 Git 저장소 생성 및 최초 커밋</strong></summary>
+
+프로젝트의 `README.md` 파일을 생성하고 현재 디렉토리를 Git 저장소로 초기화했습니다.
+
+```bash
+echo "# Codyssey_E1-1" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+```
+
+---
+
+### README.md 생성
+
+```bash
+echo "# Codyssey_E1-1" >> README.md
+```
+
+`echo`로 출력한 문자열을 `README.md` 파일의 끝에 추가합니다.
+
+- `echo`: 문자열 출력
+- `>>`: 출력 내용을 파일 끝에 추가
+- `README.md`: 내용을 저장할 파일
+
+파일이 존재하지 않으면 새로 생성되고, 이미 존재하면 기존 내용의 끝에 문자열이 추가됩니다.
+
+> 같은 명령을 여러 번 실행하면 제목이 중복으로 추가될 수 있으므로 주의해야 합니다.
+
+---
+
+### Git 저장소 초기화
+
+```bash
+git init
+```
+
+현재 디렉토리를 새로운 Git 저장소로 초기화합니다.
+
+실행 후 프로젝트 내부에 숨김 디렉토리인 `.git`이 생성됩니다.
+
+```text
+Codyssey_E1-1/
+├── .git/
+└── README.md
+```
+
+---
+
+### README.md를 Staging Area에 등록
+
+```bash
+git add README.md
+```
+
+`README.md` 파일의 현재 상태를 다음 커밋에 포함하도록 Staging Area에 등록합니다.
+
+```text
+README.md 생성 또는 수정
+        ↓
+git add README.md
+        ↓
+Staged 상태
+```
+
+---
+
+### 최초 커밋 생성
+
+```bash
+git commit -m "first commit"
+```
+
+Staging Area에 등록된 파일을 로컬 Git 저장소에 스냅샷으로 저장합니다.
+
+- `git commit`: 커밋 생성
+- `-m`: 커밋 메시지를 명령어에서 직접 지정
+- `"first commit"`: 최초 커밋을 설명하는 메시지
+
+```text
+Staging Area
+    ↓ git commit
+로컬 Git 저장소
+```
+
+<!-- Git 저장소 초기화 및 최초 커밋 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-8. 기본 브랜치 이름 변경</strong></summary>
+
+현재 브랜치 이름을 `main`으로 변경했습니다.
+
+```bash
+git branch -M main
+```
+
+### 명령어 설명
+
+- `git branch`: Git 브랜치 관리
+- `-M`: 기존 브랜치 이름이 존재하더라도 강제로 이름 변경
+- `main`: 변경할 새 브랜치 이름
+
+Git의 과거 기본 브랜치 이름은 주로 `master`였지만, 현재 많은 GitHub 저장소에서는 기본 브랜치 이름으로 `main`을 사용합니다.
+
+현재 브랜치를 확인하려면 다음 명령어를 사용할 수 있습니다.
+
+```bash
+git branch
+```
+
+현재 브랜치 앞에는 `*` 기호가 표시됩니다.
+
+```text
+* main
+```
+
+<!-- 기본 브랜치 main 변경 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-9. GitHub 원격 저장소 연결</strong></summary>
+
+로컬 Git 저장소와 GitHub의 원격 저장소를 연결했습니다.
+
+```bash
+git remote add origin https://github.com/yhana972/Codyssey_E1-1.git
+```
+
+### 명령어 설명
+
+- `git remote`: 원격 저장소 관리
+- `add`: 새로운 원격 저장소 등록
+- `origin`: 원격 저장소에 붙이는 기본 별칭
+- GitHub URL: 연결할 원격 저장소 주소
+
+```text
+로컬 저장소
+    ↓ origin
+GitHub 원격 저장소
+```
+
+`origin`은 필수 이름은 아니지만, Git에서 첫 번째 원격 저장소를 가리킬 때 관례적으로 사용합니다.
+
+---
+
+### 원격 저장소 확인
+
+```bash
+git remote -v
+```
+
+`-v`는 `verbose`의 축약 옵션으로, 원격 저장소 이름과 URL을 함께 출력합니다.
+
+예상되는 HTTPS 연결 상태는 다음과 같습니다.
+
+```text
+origin  https://github.com/yhana972/Codyssey_E1-1.git (fetch)
+origin  https://github.com/yhana972/Codyssey_E1-1.git (push)
+```
+
+- `fetch`: 원격 저장소에서 데이터를 가져올 때 사용하는 주소
+- `push`: 로컬 커밋을 원격 저장소로 전송할 때 사용하는 주소
+
+<!-- GitHub 원격 저장소 연결 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-10. 최초 GitHub Push</strong></summary>
+
+로컬 저장소의 `main` 브랜치를 GitHub 원격 저장소로 전송했습니다.
+
+```bash
+git push -u origin main
+```
+
+### 명령어 설명
+
+- `git push`: 로컬 커밋을 원격 저장소로 전송
+- `-u`: 로컬 브랜치와 원격 브랜치의 추적 관계 설정
+- `origin`: 전송할 원격 저장소 이름
+- `main`: 전송할 로컬 브랜치 이름
+
+`-u`는 `--set-upstream`의 축약 옵션입니다.
+
+최초 Push에서 추적 관계를 설정하면 이후에는 다음과 같이 원격 저장소와 브랜치 이름을 생략할 수 있습니다.
+
+```bash
+git push
+```
+
+또는 원격 저장소의 변경 내용을 가져올 때 다음과 같이 실행할 수 있습니다.
+
+```bash
+git pull
+```
+
+### Push 흐름
+
+```text
+Working Directory에서 파일 수정
+        ↓
+git add
+        ↓
+git commit
+        ↓
+로컬 저장소에 커밋 생성
+        ↓
+git push
+        ↓
+GitHub 원격 저장소에 전송
+```
+
+GitHub 저장소에서 `README.md`와 최초 커밋이 정상적으로 등록되었는지 확인했습니다.
+
+<!-- 최초 git push 실행 이미지 삽입 위치 -->
+
+<!-- GitHub 저장소 업로드 확인 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-11. 원격 저장소 주소를 HTTPS에서 SSH로 변경</strong></summary>
+
+처음에는 GitHub 원격 저장소를 HTTPS 주소로 연결했습니다.
+
+```text
+https://github.com/yhana972/Codyssey_E1-1.git
+```
+
+이후 GitHub SSH 인증을 사용하기 위해 원격 저장소 주소를 SSH 형식으로 변경했습니다.
+
+---
+
+### 변경 전 원격 저장소 확인
+
+```bash
+git remote -v
+```
+
+변경 전에는 다음과 같이 HTTPS 주소가 표시됩니다.
+
+```text
+origin  https://github.com/yhana972/Codyssey_E1-1.git (fetch)
+origin  https://github.com/yhana972/Codyssey_E1-1.git (push)
+```
+
+<!-- SSH 변경 전 git remote -v 이미지 삽입 위치 -->
+
+---
+
+### 원격 저장소 주소 변경
+
+```bash
+git remote set-url origin git@github.com:yhana972/Codyssey_E1-1.git
+```
+
+### 명령어 설명
+
+- `git remote`: 원격 저장소 관리
+- `set-url`: 등록된 원격 저장소 URL 변경
+- `origin`: 변경할 원격 저장소 이름
+- `git@github.com:...`: GitHub SSH 형식의 저장소 주소
+
+이 명령은 저장소를 새로 등록하는 것이 아니라 기존 `origin`의 주소만 변경합니다.
+
+```text
+변경 전
+origin → HTTPS 주소
+
+변경 후
+origin → SSH 주소
+```
+
+---
+
+### 변경 후 원격 저장소 확인
+
+```bash
+git remote -v
+```
+
+변경이 완료되면 다음과 같이 SSH 주소가 표시됩니다.
+
+```text
+origin  git@github.com:yhana972/Codyssey_E1-1.git (fetch)
+origin  git@github.com:yhana972/Codyssey_E1-1.git (push)
+```
+
+<!-- SSH 변경 후 git remote -v 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-12. SSH 연결 및 Push 성공 확인</strong></summary>
+
+원격 저장소 주소를 SSH 형식으로 변경한 후 GitHub와의 SSH 인증이 정상적으로 동작하는지 확인했습니다.
+
+GitHub SSH 연결 자체를 확인하려면 다음 명령어를 사용할 수 있습니다.
+
+```bash
+ssh -T git@github.com
+```
+
+최초 연결 시 GitHub 서버의 호스트 키를 신뢰할 것인지 묻는 메시지가 나타날 수 있습니다.
+
+```text
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+이 경우 GitHub 서버 주소가 맞는지 확인한 뒤 `yes`를 입력합니다.
+
+SSH 키가 GitHub 계정에 정상적으로 등록되어 있다면 인증 성공 메시지가 출력됩니다.
+
+> GitHub SSH 연결은 셸 접속을 제공하는 것이 아니라 Git 작업을 위한 인증이므로, 인증에 성공해도 일반 서버처럼 터미널에 로그인되지는 않습니다.
+
+---
+
+### SSH 방식으로 Push
+
+변경 사항을 커밋한 후 Push를 실행했습니다.
+
+```bash
+git push
+```
+
+추적 브랜치가 설정되지 않은 경우 다음과 같이 실행할 수 있습니다.
+
+```bash
+git push -u origin main
+```
+
+Push가 정상적으로 완료되고 GitHub 저장소에 변경 내용이 반영된 것을 확인했습니다.
+
+<!-- GitHub SSH 인증 성공 이미지 삽입 위치 -->
+
+<!-- SSH 방식 git push 성공 이미지 삽입 위치 -->
+
+<!-- GitHub 저장소 최종 확인 이미지 삽입 위치 -->
+
+</details>
+
+---
+
+<details>
+<summary><strong>5-13. Git 및 GitHub 실습 결과 요약</strong></summary>
+
+이번 실습에서는 버전 관리 시스템의 종류와 Git의 기본 구조를 학습하고, 로컬 프로젝트를 GitHub 원격 저장소에 연결했습니다.
+
+### 수행한 주요 작업
+
+| 수행 항목 | 명령어 |
+| :--- | :--- |
+| Git 버전 확인 | `git --version` |
+| 사용자 이름 설정 | `git config --global user.name "사용자 이름"` |
+| 사용자 이메일 설정 | `git config --global user.email "이메일"` |
+| 기본 브랜치 설정 | `git config --global init.defaultBranch main` |
+| Git 설정 확인 | `git config --list` |
+| README 생성 | `echo "# Codyssey_E1-1" >> README.md` |
+| Git 저장소 초기화 | `git init` |
+| 파일 Stage | `git add README.md` |
+| 최초 커밋 | `git commit -m "first commit"` |
+| 브랜치 이름 변경 | `git branch -M main` |
+| GitHub 원격 저장소 추가 | `git remote add origin HTTPS주소` |
+| 최초 Push | `git push -u origin main` |
+| 원격 저장소 확인 | `git remote -v` |
+| 원격 주소를 SSH로 변경 | `git remote set-url origin SSH주소` |
+| GitHub SSH 인증 확인 | `ssh -T git@github.com` |
+| SSH 방식 Push | `git push` |
+
+---
+
+### Git의 기본 작업 흐름
+
+```text
+Working Directory
+    ↓ 파일 수정
+Modified
+    ↓ git add
+Staging Area
+    ↓ git commit
+Local Repository
+    ↓ git push
+GitHub Remote Repository
+```
+
+---
+
+### HTTPS와 SSH 연결 비교
+
+| 구분 | HTTPS | SSH |
+| :--- | :--- | :--- |
+| 주소 형식 | `https://github.com/...` | `git@github.com:...` |
+| 인증 방식 | 브라우저 인증 또는 토큰 | SSH 공개키와 개인키 |
+| 초기 설정 | 비교적 간단함 | SSH 키 생성 및 GitHub 등록 필요 |
+| 반복 사용 | 인증 정보가 필요할 수 있음 | 키 등록 후 편리하게 사용 가능 |
+| 원격 주소 변경 | `git remote set-url` 사용 | `git remote set-url` 사용 |
+
+---
+
+### 최종 결과
+
+- Git 사용자 이름과 이메일을 설정했습니다.
+- 프로젝트 디렉토리를 Git 저장소로 초기화했습니다.
+- `README.md`를 Staging Area에 등록하고 최초 커밋을 생성했습니다.
+- 로컬 `main` 브랜치를 GitHub 저장소로 Push했습니다.
+- 원격 저장소 연결 방식을 HTTPS에서 SSH로 변경했습니다.
+- SSH 인증을 통해 GitHub에 정상적으로 Push되는 것을 확인했습니다.
+
+</details>
