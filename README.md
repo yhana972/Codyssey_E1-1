@@ -99,14 +99,21 @@ curl -i http://localhost:8080
 
 **검증:** `codyssey-web:1.0` 이미지 빌드, Nginx 컨테이너 실행, `HTTP/1.1 200 OK` 응답을 확인했습니다.
 
-> 📸 **캡처 04 — Image build:** `docs/images/04-docker-build.png`
+> 📸 **대표 캡처 — Image build:** `docs/images/docker/docker-10-image-build.png`
 >
-> 📸 **캡처 05 — Container와 HTTP 응답:** `docs/images/05-docker-http.png`
+> 📸 **대표 캡처 — Container와 HTTP 응답:** `docs/images/docker/docker-14-http-response.png`
 
-<!-- ![Docker 커스텀 이미지 빌드](docs/images/04-docker-build.png) -->
-<!-- ![Docker 컨테이너 상태와 HTTP 200 응답](docs/images/05-docker-http.png) -->
+<details>
+<summary><strong>대표 검증 캡처 보기</strong></summary>
+
+![Docker 커스텀 이미지 빌드](docs/images/docker/docker-10-image-build.png)
+![Docker 컨테이너 상태와 HTTP 200 응답](docs/images/docker/docker-14-http-response.png)
+
+</details>
 
 [👉 상세 보기](../../wiki/Docker-이미지와-컨테이너)
+
+[📸 전체 실행 캡처 73장](../../wiki/Docker-실행-로그와-캡처)
 
 ### 3-4. Bind Mount와 Volume 영속성
 
@@ -125,12 +132,17 @@ docker run -d --name volume-web-1 -p 8082:80 \
 
 **검증:** Bind Mount의 실시간 파일 반영과 컨테이너 삭제·재생성 후 `codyssey-data`의 데이터 유지를 확인했습니다.
 
-> 📸 **캡처 06 — Bind Mount 반영:** `docs/images/06-bind-mount.png`
+> 📸 **대표 캡처 — Bind Mount 반영:** `docs/images/docker/docker-19-bind-after-update.png`
 >
-> 📸 **캡처 07 — Volume 영속성:** `docs/images/07-volume-persistence.png`
+> 📸 **대표 캡처 — Volume 영속성:** `docs/images/docker/docker-27-volume-persistence.png`
 
-<!-- ![Bind Mount 실시간 변경 반영](docs/images/06-bind-mount.png) -->
-<!-- ![컨테이너 재생성 후 Volume 데이터 유지](docs/images/07-volume-persistence.png) -->
+<details>
+<summary><strong>대표 검증 캡처 보기</strong></summary>
+
+![Bind Mount 실시간 변경 반영](docs/images/docker/docker-19-bind-after-update.png)
+![컨테이너 재생성 후 Volume 데이터 유지](docs/images/docker/docker-27-volume-persistence.png)
+
+</details>
 
 [👉 상세 보기](../../wiki/Docker-스토리지-Bind-Mount와-Volume)
 
@@ -153,15 +165,20 @@ docker compose down
 | `APP_MODE` | `development` | `production` | 응답 헤더와 컨테이너 환경 변수에 반영 |
 | 서비스 간 통신 | `http://web:8080` | `http://web:9090` | `probe → web` 요청 성공 |
 
-> 📸 **캡처 08 — Compose 실행 상태:** `docs/images/08-compose-ps.png`
+> 📸 **대표 캡처 — Compose 실행 상태:** `docs/images/docker/docker-57-multi-compose-ps.png`
 >
-> 📸 **캡처 09 — 서비스 간 통신:** `docs/images/09-compose-network.png`
+> 📸 **대표 캡처 — 서비스 간 통신:** `docs/images/docker/docker-65-interservice-http.png`
 >
-> 📸 **캡처 10 — 환경 변수 변경 검증:** `docs/images/10-compose-env-change.png`
+> 📸 **대표 캡처 — 환경 변수 변경 검증:** `docs/images/docker/docker-72-new-port-success.png`
 
-<!-- ![Docker Compose 서비스 실행 상태](docs/images/08-compose-ps.png) -->
-<!-- ![Compose 서비스 디스커버리와 컨테이너 간 통신](docs/images/09-compose-network.png) -->
-<!-- ![환경 변수 변경 전후 HTTP 응답](docs/images/10-compose-env-change.png) -->
+<details>
+<summary><strong>대표 검증 캡처 보기</strong></summary>
+
+![Docker Compose 서비스 실행 상태](docs/images/docker/docker-57-multi-compose-ps.png)
+![Compose 서비스 디스커버리와 컨테이너 간 통신](docs/images/docker/docker-65-interservice-http.png)
+![환경 변수 변경 전후 HTTP 응답](docs/images/docker/docker-72-new-port-success.png)
+
+</details>
 
 <details>
 <summary><strong>핵심 검증 로그 보기</strong></summary>

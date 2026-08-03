@@ -34,13 +34,7 @@ README와 GitHub Wiki에서 사용하는 실습 이미지 저장 위치입니다
 | `git/git-04-remote-https-to-ssh.png` | Remote URL 변경 전·후 | ✅ |
 | `git/git-05-ssh-auth-success.png` | `ssh -T git@github.com` 인증 성공 | ✅ |
 | `git/git-06-ssh-push-success.png` | SSH 방식 push 성공 | ✅ |
-| `04-docker-build.png` | `docker build` 성공과 생성된 image | ✅ |
-| `05-docker-http.png` | `docker ps`와 `curl`의 `200 OK` | ✅ |
-| `06-bind-mount.png` | Host 파일 수정 전·후 웹 반영 | ✅ |
-| `07-volume-persistence.png` | Container 삭제·재생성 후 데이터 유지 | ✅ |
-| `08-compose-ps.png` | `docker compose ps`의 서비스·포트 상태 | ✅ |
-| `09-compose-network.png` | `nslookup web`과 `probe → web` 응답 | ✅ |
-| `10-compose-env-change.png` | port와 `APP_MODE` 변경 전·후 | ✅ |
+| [`docker/`](docker/README.md) | Docker 전체 실습 캡처 73개 | ✅ |
 | `11-troubleshooting.png` | 대표 오류 메시지와 해결 후 결과 | 선택 |
 
 ## 캡처 기준
