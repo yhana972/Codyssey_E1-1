@@ -29,7 +29,7 @@
 
 ## 🧪 3. 수행 로그 및 검증 요약
 
-> **이미지 첨부 방법:** 캡처 파일을 `docs/images/`에 권장 파일명으로 저장한 뒤, 각 위치의 `<!-- ![...](...) -->`에서 주석 기호만 제거합니다. 캡처에는 명령어와 검증 결과가 한 화면에 보이도록 구성하고 계정 이메일·SSH key·token은 가립니다.
+> 상세 실행 로그와 전체 캡처는 각 항목의 GitHub Wiki에서 확인할 수 있습니다. README에는 평가에 필요한 대표 검증 이미지만 표시합니다.
 
 ### 3-1. Linux CLI와 권한
 
@@ -47,12 +47,22 @@ chmod 777 Codyssey/new.txt
 | `Codyssey` 디렉터리 | `drwxr-xr-x` (`755`) | `drwx------` (`700`) | 소유자만 접근 가능 |
 | `new.txt` 파일 | `-rw-r--r--` (`644`) | `-rwxrwxrwx` (`777`) | 권한 변경 확인 |
 
-> 📸 **캡처 01 — 기본 명령어 실행:** `docs/images/01-linux-cli.png`
->
-> 📸 **캡처 02 — 권한 변경 전·후:** `docs/images/02-linux-permission.png`
+<details>
+<summary><strong>대표 검증 캡처 3장 보기</strong></summary>
 
-<!-- ![Linux 기본 명령어 실행](docs/images/01-linux-cli.png) -->
-<!-- ![파일과 디렉터리 권한 변경 전후](docs/images/02-linux-permission.png) -->
+#### 숨김 파일을 포함한 목록 확인
+
+![숨김 파일을 포함한 디렉터리 목록](docs/images/terminal/terminal-02-list-all.png)
+
+#### 디렉터리 권한 `755 → 700`
+
+![디렉터리 권한 변경 전후](docs/images/terminal/terminal-14-directory-permission.png)
+
+#### 파일 권한 `644 → 777`
+
+![파일 권한 변경 전후](docs/images/terminal/terminal-15-file-permission.png)
+
+</details>
 
 [👉 상세 보기](../../wiki/Linux-CLI와-파일-권한)
 
