@@ -79,11 +79,11 @@ git push -u origin main
 
 **검증:** 원격 저장소의 fetch/push URL이 SSH 형식으로 설정되고 GitHub 인증 및 `main` push에 성공했습니다.
 
-> 📸 **캡처 03 — GitHub SSH 연결:** `docs/images/03-git-ssh.png`
+> 📸 **대표 캡처 — GitHub SSH push 성공:** `docs/images/git/git-06-ssh-push-success.png`
 >
-> `ssh -T`, `git remote -v`, push 성공 결과를 포함합니다.
+> Git 초기 설정과 HTTPS→SSH 변경을 포함한 전체 캡처 6장은 Wiki에서 확인합니다.
 
-<!-- ![GitHub SSH 인증과 원격 저장소 연결](docs/images/03-git-ssh.png) -->
+![GitHub SSH 인증과 push 성공](docs/images/git/git-06-ssh-push-success.png)
 
 [👉 상세 보기](../../wiki/Git과-GitHub-SSH)
 

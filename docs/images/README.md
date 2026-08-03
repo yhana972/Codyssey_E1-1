@@ -28,7 +28,12 @@ README와 GitHub Wiki에서 사용하는 실습 이미지 저장 위치입니다
 
 | 파일명 | 캡처할 내용 | 필수 |
 | --- | --- | :---: |
-| `03-git-ssh.png` | `ssh -T`, `git remote -v`, push 성공 | ✅ |
+| `git/git-01-config-user.png` | Git 사용자 이름·이메일 설정 | ✅ |
+| `git/git-02-config-list.png` | `git config --list` 결과 | ✅ |
+| `git/git-03-initial-push.png` | 저장소 초기화와 최초 push | ✅ |
+| `git/git-04-remote-https-to-ssh.png` | Remote URL 변경 전·후 | ✅ |
+| `git/git-05-ssh-auth-success.png` | `ssh -T git@github.com` 인증 성공 | ✅ |
+| `git/git-06-ssh-push-success.png` | SSH 방식 push 성공 | ✅ |
 | `04-docker-build.png` | `docker build` 성공과 생성된 image | ✅ |
 | `05-docker-http.png` | `docker ps`와 `curl`의 `200 OK` | ✅ |
 | `06-bind-mount.png` | Host 파일 수정 전·후 웹 반영 | ✅ |
