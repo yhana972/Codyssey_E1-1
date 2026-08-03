@@ -29,6 +29,8 @@
 
 ## 🧪 3. 수행 로그 및 검증 요약
 
+> **이미지 첨부 방법:** 캡처 파일을 `docs/images/`에 권장 파일명으로 저장한 뒤, 각 위치의 `<!-- ![...](...) -->`에서 주석 기호만 제거합니다. 캡처에는 명령어와 검증 결과가 한 화면에 보이도록 구성하고 계정 이메일·SSH key·token은 가립니다.
+
 ### 3-1. Linux CLI와 권한
 
 ```bash
@@ -45,7 +47,12 @@ chmod 777 Codyssey/new.txt
 | `Codyssey` 디렉터리 | `drwxr-xr-x` (`755`) | `drwx------` (`700`) | 소유자만 접근 가능 |
 | `new.txt` 파일 | `-rw-r--r--` (`644`) | `-rwxrwxrwx` (`777`) | 권한 변경 확인 |
 
-<!-- 📸 캡처: Linux 명령 실행 및 chmod 전/후 비교 -->
+> 📸 **캡처 01 — 기본 명령어 실행:** `docs/images/01-linux-cli.png`
+>
+> 📸 **캡처 02 — 권한 변경 전·후:** `docs/images/02-linux-permission.png`
+
+<!-- ![Linux 기본 명령어 실행](docs/images/01-linux-cli.png) -->
+<!-- ![파일과 디렉터리 권한 변경 전후](docs/images/02-linux-permission.png) -->
 
 [👉 상세 보기](../../wiki/Linux-CLI와-파일-권한)
 
@@ -62,7 +69,11 @@ git push -u origin main
 
 **검증:** 원격 저장소의 fetch/push URL이 SSH 형식으로 설정되고 GitHub 인증 및 `main` push에 성공했습니다.
 
-<!-- 📸 캡처: git remote -v, ssh -T, push 성공 화면 -->
+> 📸 **캡처 03 — GitHub SSH 연결:** `docs/images/03-git-ssh.png`
+>
+> `ssh -T`, `git remote -v`, push 성공 결과를 포함합니다.
+
+<!-- ![GitHub SSH 인증과 원격 저장소 연결](docs/images/03-git-ssh.png) -->
 
 [👉 상세 보기](../../wiki/Git과-GitHub-SSH)
 
@@ -78,7 +89,12 @@ curl -i http://localhost:8080
 
 **검증:** `codyssey-web:1.0` 이미지 빌드, Nginx 컨테이너 실행, `HTTP/1.1 200 OK` 응답을 확인했습니다.
 
-<!-- 📸 캡처: docker build, docker ps, curl 200 OK -->
+> 📸 **캡처 04 — Image build:** `docs/images/04-docker-build.png`
+>
+> 📸 **캡처 05 — Container와 HTTP 응답:** `docs/images/05-docker-http.png`
+
+<!-- ![Docker 커스텀 이미지 빌드](docs/images/04-docker-build.png) -->
+<!-- ![Docker 컨테이너 상태와 HTTP 200 응답](docs/images/05-docker-http.png) -->
 
 [👉 상세 보기](../../wiki/Docker-이미지와-컨테이너)
 
@@ -99,7 +115,12 @@ docker run -d --name volume-web-1 -p 8082:80 \
 
 **검증:** Bind Mount의 실시간 파일 반영과 컨테이너 삭제·재생성 후 `codyssey-data`의 데이터 유지를 확인했습니다.
 
-<!-- 📸 캡처: Bind Mount 반영 및 result.txt 영속성 확인 -->
+> 📸 **캡처 06 — Bind Mount 반영:** `docs/images/06-bind-mount.png`
+>
+> 📸 **캡처 07 — Volume 영속성:** `docs/images/07-volume-persistence.png`
+
+<!-- ![Bind Mount 실시간 변경 반영](docs/images/06-bind-mount.png) -->
+<!-- ![컨테이너 재생성 후 Volume 데이터 유지](docs/images/07-volume-persistence.png) -->
 
 [👉 상세 보기](../../wiki/Docker-스토리지-Bind-Mount와-Volume)
 
@@ -122,7 +143,15 @@ docker compose down
 | `APP_MODE` | `development` | `production` | 응답 헤더와 컨테이너 환경 변수에 반영 |
 | 서비스 간 통신 | `http://web:8080` | `http://web:9090` | `probe → web` 요청 성공 |
 
-<!-- 📸 캡처: compose ps, 환경 변수, nslookup, curl 응답 -->
+> 📸 **캡처 08 — Compose 실행 상태:** `docs/images/08-compose-ps.png`
+>
+> 📸 **캡처 09 — 서비스 간 통신:** `docs/images/09-compose-network.png`
+>
+> 📸 **캡처 10 — 환경 변수 변경 검증:** `docs/images/10-compose-env-change.png`
+
+<!-- ![Docker Compose 서비스 실행 상태](docs/images/08-compose-ps.png) -->
+<!-- ![Compose 서비스 디스커버리와 컨테이너 간 통신](docs/images/09-compose-network.png) -->
+<!-- ![환경 변수 변경 전후 HTTP 응답](docs/images/10-compose-env-change.png) -->
 
 <details>
 <summary><strong>핵심 검증 로그 보기</strong></summary>
@@ -148,6 +177,10 @@ docker compose down 후 컨테이너·기본 네트워크 제거 확인
 | 기존 컨테이너에 Volume 추가 불가 | 컨테이너 생성 후 Mount/포트 설정은 변경 불가 | 기존 컨테이너를 중지하고 올바른 Mount 설정으로 새 컨테이너 생성 |
 | `port is already allocated` | 두 컨테이너가 같은 Host port 점유 | Host port를 `8081`, `8082`처럼 분리 |
 | 설정 변경 후 이전 포트가 계속 사용됨 | `.env` 변경값이 기존 컨테이너에 미반영 | `docker compose up -d --force-recreate`로 재생성 |
+
+> 📸 **선택 캡처 11 — 오류와 해결 결과:** `docs/images/11-troubleshooting.png`
+
+<!-- ![오류 메시지와 해결 후 정상 실행 결과](docs/images/11-troubleshooting.png) -->
 
 [👉 전체 해결 과정](../../wiki/트러블슈팅)
 
